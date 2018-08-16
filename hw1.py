@@ -13,6 +13,7 @@ you create in part II.
 """
 
 import tensorflow as tf
+import time
 
 """ PART I """
 
@@ -46,8 +47,6 @@ def add_consts_with_placeholder():
     af = tf.add(a1, c3)
     return af, c3
 
-with tf.Session() as sess:
-    print(sess.run(add_consts_with_placeholder(), feed_dict={c3:3}))
 
 def my_relu(in_value):
     """
@@ -55,17 +54,8 @@ def my_relu(in_value):
     and returns the appropriate output. For more information see the assignment spec.
     """
 
-    with tf.Session() as sess:
-        if sess.run(in_value) > 0:
-            out_value = in_value
-        else:
-            out_value = tf.constant(0)
+    return tf.nn.relu(in_value)
 
-    return out_value
-
-with tf.Session() as sess:
-    c1 = tf.constant(-1.0)
-    print(sess.run(my_relu(c1)))
 
 def my_perceptron(x):
     """
@@ -92,7 +82,7 @@ def my_perceptron(x):
 
     p1 = tf.placeholder(tf.float32, [x])
     v1 = tf.get_variable("perceptron", [x], dtype=tf.float32, initializer=tf.ones_initializer)
-    dot = tf.tensordot(p1, v1)
+    dot = tf.tensordot(p1, v1, 1)
     out = my_relu(dot)
 
     return p1, out
@@ -131,6 +121,26 @@ def onelayer(X, Y, layersize=10):
         batch_xentropy: The cross-entropy loss for each image in the batch
         batch_loss: The average cross-entropy loss of the batch
     """
+
+    #weight matrix
+    w = tf.get_variable(time.time(), [784, layersize], dtype=tf.float32, initializer=tf.ones_initializer)
+    
+    #bias matrix
+    b = tf.get_variable(time.time(), [1, layersize], dtype=tf.float32, initializer=tf.ones_initializer)
+
+    #apply propagation on each image
+
+    #evaluating the weights + bias
+    logits = tf.add(tf.matmul(X, w), b)
+
+    #applying softmax to output layer
+    preds = tf.nn.softmax(logits)
+
+    #cross entropy for each image
+    batch_xentropy = tf.nn.softmax_cross_entropy_with_logits_v2(labels=Y, logits=logits)
+    
+    #calculating loss
+    batch_loss = tf.losses.softmax_cross_entropy(Y, logits=logits,)
 
     return w, b, logits, preds, batch_xentropy, batch_loss
 
