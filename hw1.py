@@ -13,7 +13,7 @@ you create in part II.
 """
 
 import tensorflow as tf
-import time
+import random
 
 """ PART I """
 
@@ -102,8 +102,6 @@ def target_placeholder():
                           name="image_target_onehot")
 
 
-
-
 def onelayer(X, Y, layersize=10):
     """
     Create a Tensorflow model for logistic regression (i.e. single layer NN)
@@ -123,10 +121,10 @@ def onelayer(X, Y, layersize=10):
     """
 
     #weight matrix
-    w = tf.get_variable(time.time(), [784, layersize], dtype=tf.float32, initializer=tf.ones_initializer)
+    w = tf.get_variable(str(random.random()), [784, layersize], dtype=tf.float32, initializer=tf.ones_initializer)
     
     #bias matrix
-    b = tf.get_variable(time.time(), [1, layersize], dtype=tf.float32, initializer=tf.ones_initializer)
+    b = tf.get_variable(str(random.random()), [1, layersize], dtype=tf.float32, initializer=tf.ones_initializer)
 
     #apply propagation on each image
 
