@@ -161,10 +161,38 @@ def twolayer(X, Y, hiddensize=30, outputsize=10):
         batch_loss: The average cross-entropy loss of the batch
     """
 
+    #weight matrix
+    w1 = tf.get_variable(str(random.random()), [784, hiddensize], dtype=tf.float32, initializer=tf.ones_initializer)
+    
+    #bias matrix
+    b1 = tf.get_variable(str(random.random()), [1, hiddensize], dtype=tf.float32, initializer=tf.ones_initializer)
+
+    #weight matrix
+    w2 = tf.get_variable(str(random.random()), [hiddensize, outputsize], dtype=tf.float32, initializer=tf.ones_initializer)
+    
+    #bias matrix
+    b2 = tf.get_variable(str(random.random()), [1, outputsize], dtype=tf.float32, initializer=tf.ones_initializer)
+
+    #apply propagation on each image
+
+    #evaluating the weights + bias
+    logits = tf.add(tf.matmul(X, w1), b1)
+
+    logits = tf.add(tf.matmul(logits, w2), b2)
+
+    #applying softmax to output layer
+    preds = tf.nn.softmax(logits)
+
+    #cross entropy for each image
+    batch_xentropy = tf.nn.softmax_cross_entropy_with_logits_v2(labels=Y, logits=logits)
+    
+    #calculating loss
+    batch_loss = tf.losses.softmax_cross_entropy(Y, logits=logits,)
+
     return w1, b1, w2, b2, logits, preds, batch_xentropy, batch_loss
 
 
-def convnet(X, Y, convlayer_sizes=[10, 10], \
+def convnet(X, Y, convlayer_sizes=[10, 10], 
             filter_shape=[3, 3], outputsize=10, padding="same"):
     """
     Create a Tensorflow model for a Convolutional Neural Network. The network
@@ -190,6 +218,36 @@ def convnet(X, Y, convlayer_sizes=[10, 10], \
     will be from the conv2 layer. If you reshape the conv2 output using tf.reshape,
     you should be able to call onelayer() to get the final layer of your network
     """
+
+    #reshaping to 2d layer
+    layer1 = tf.reshape(X, [28,28])
+
+    #conv filter 1
+    conv1 = tf.layers.conv2d(X, convlayer_sizes[0], filter_shape, padding=padding, activation=tf.nn.relu, trainable=True)
+
+    #reshapring to 2d Layer
+    layer2 = tf.reshape(conv1, [1])
+
+    #conv filter 1
+    conv2 = tf.layers.conv2d(conv1, convlayer_sizes[1], filter_shape, padding=padding, activation=tf.nn.relu, trainable=True)
+
+    #weight matrix
+    w = tf.get_variable(str(random.random()), [convlayer_sizes[1], outputsize], dtype=tf.float32, initializer=tf.ones_initializer)
+    
+    #bias matrix
+    b = tf.get_variable(str(random.random()), [1, outputsize], dtype=tf.float32, initializer=tf.ones_initializer)
+    
+    #evaluating the weights + bias
+    logits = tf.add(tf.matmul(conv2, w), b)
+
+    #applying softmax to output layer
+    preds = tf.nn.softmax(logits)
+
+    #cross entropy for each image
+    batch_xentropy = tf.nn.softmax_cross_entropy_with_logits_v2(labels=Y, logits=logits)
+    
+    #calculating loss
+    batch_loss = tf.losses.softmax_cross_entropy(Y, logits=logits,)
 
     return conv1, conv2, w, b, logits, preds, batch_xentropy, batch_loss
 
