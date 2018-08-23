@@ -162,13 +162,13 @@ def twolayer(X, Y, hiddensize=30, outputsize=10):
     """
 
     #weight matrix
-    w1 = tf.get_variable(str(random.random()), [X.get_shape()[1], hiddensize], dtype=tf.float32, initializer=tf.random_uniform_initializer)
+    w1 = tf.get_variable(str(random.random()), [X.get_shape()[1], hiddensize], dtype=tf.float32, initializer=tf.uniform_unit_scaling_initializer)
     
     #bias matrix
     b1 = tf.get_variable(str(random.random()), [1, hiddensize], dtype=tf.float32, initializer=tf.ones_initializer)
 
     #weight matrix
-    w2 = tf.get_variable(str(random.random()), [hiddensize, outputsize], dtype=tf.float32, initializer=tf.random_uniform_initializer)
+    w2 = tf.get_variable(str(random.random()), [hiddensize, outputsize], dtype=tf.float32, initializer=tf.uniform_unit_scaling_initializer)
     
     #bias matrix
     b2 = tf.get_variable(str(random.random()), [1, outputsize], dtype=tf.float32, initializer=tf.ones_initializer)
