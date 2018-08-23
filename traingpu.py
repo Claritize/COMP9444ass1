@@ -7,7 +7,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 import os
 import sys
 
-config = tf.ConfigProto(log_device_placement=True)
+config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 sid = sys.argv[1]
 base_path = "../../../COMP9444Results/ass1/plague"
