@@ -7,6 +7,8 @@ from tensorflow.examples.tutorials.mnist import input_data
 import os
 import sys
 
+config = tf.ConfigProto(log_device_placement=True)
+config.gpu_options.allow_growth = True
 sid = sys.argv[1]
 base_path = "../../../COMP9444Results/ass1/plague"
 qfns_path = os.path.realpath(os.path.join(base_path, sid))
@@ -166,7 +168,7 @@ if __name__ == "__main__":
     init_op = tf.global_variables_initializer()
 
     # Get started
-    sess = tf.Session()
+    sess = tf.Session(config=config)
     sess.run(init_op)
 
     # Initialise TensorBoard Summary writers
