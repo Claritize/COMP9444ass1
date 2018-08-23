@@ -124,7 +124,7 @@ def onelayer(X, Y, layersize=10):
     w = tf.get_variable(str(random.random()), [X.get_shape()[1], layersize], dtype=tf.float32, initializer=tf.ones_initializer)
     
     #bias matrix
-    b = tf.get_variable(str(random.random()), [1, layersize], dtype=tf.float32, initializer=tf.ones_initializer)
+    b = tf.get_variable(str(random.random()), [1, layersize], dtype=tf.float32, initializer=tf.zeros_initializer)
 
     #apply propagation on each image
 
@@ -162,13 +162,13 @@ def twolayer(X, Y, hiddensize=30, outputsize=10):
     """
 
     #weight matrix
-    w1 = tf.get_variable(str(random.random()), [X.get_shape()[1], hiddensize], dtype=tf.float32, initializer=tf.ones_initializer)
+    w1 = tf.get_variable(str(random.random()), [X.get_shape()[1], hiddensize], dtype=tf.float32, initializer=tf.random_uniform_initializer)
     
     #bias matrix
     b1 = tf.get_variable(str(random.random()), [1, hiddensize], dtype=tf.float32, initializer=tf.ones_initializer)
 
     #weight matrix
-    w2 = tf.get_variable(str(random.random()), [hiddensize, outputsize], dtype=tf.float32, initializer=tf.ones_initializer)
+    w2 = tf.get_variable(str(random.random()), [hiddensize, outputsize], dtype=tf.float32, initializer=tf.random_uniform_initializer)
     
     #bias matrix
     b2 = tf.get_variable(str(random.random()), [1, outputsize], dtype=tf.float32, initializer=tf.ones_initializer)
@@ -178,9 +178,13 @@ def twolayer(X, Y, hiddensize=30, outputsize=10):
     #evaluating the weights + bias
     logits = tf.add(tf.matmul(X, w1), b1)
 
+    #applying relu activation on tensors
+    logits = tf.nn.relu(logits)
+
+    #evaluating layer 2 weights + biases
     logits = tf.add(tf.matmul(logits, w2), b2)
 
-    #applying softmax to output layer
+    #applying softmax activation on tensors
     preds = tf.nn.softmax(logits)
 
     #cross entropy for each image
